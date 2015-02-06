@@ -1,0 +1,15 @@
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+
+language: scala
+
+jdk:
+  - openjdk7
+
+script:
+  - sbt test
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
+  - find $HOME/.ivy2/cache -name "*SNAPSHOT*" | xargs rm -rf
