@@ -1,5 +1,7 @@
 package scalaz
 
+import Either._
+
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
 
