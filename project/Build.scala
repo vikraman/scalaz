@@ -8,7 +8,7 @@ object ScalazBuild extends Build {
   lazy val root = Project(
     id = "root",
     base = file(".")
-  ).aggregate(prelude, core, clazz, data, io, rts, examples)
+  ).aggregate(prelude, core, clazz, io, rts, examples)
 
   lazy val prelude = Project(
     id = "prelude",
@@ -22,19 +22,12 @@ object ScalazBuild extends Build {
     base = file("core")).settings(
     name := "scalaz-core",
     libraryDependencies ++= testDeps
-  ).dependsOn(prelude, clazz, data)
+  ).dependsOn(prelude, clazz)
 
   lazy val clazz = Project(
     id = "class",
     base = file("class")).settings(
     name := "scalaz-class",
-    libraryDependencies ++= testDeps
-  ).dependsOn(prelude)
-
-  lazy val data = Project(
-    id = "data",
-    base = file("data")).settings(
-    name := "scalaz-data",
     libraryDependencies ++= testDeps
   ).dependsOn(prelude)
 
