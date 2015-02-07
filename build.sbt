@@ -13,4 +13,7 @@ scalacOptions in ThisBuild ++= Seq(
   "-Yno-predef"
 )
 
-resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
+resolvers in ThisBuild ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  "bintray/non" at "http://dl.bintray.com/non/maven"
+)

@@ -9,7 +9,9 @@ object ScalazBuild extends Build {
     id = prjName,
     base = file(prjName)).settings(
     name := s"scalaz-$prjName",
-    libraryDependencies ++= testDeps
+    libraryDependencies ++= testDeps ++ Seq(
+      compilerPlugin("org.spire-math" %% "kind-projector" % "0.5.2")
+    )
   )
 
   lazy val root = Project(
