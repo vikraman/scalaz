@@ -18,4 +18,16 @@ object Profunctor {
     def second[A, B, C](pab: P[A, B]): P[(C, A), (C, B)] =
       profunctor.dimap[(C, A), (A, C), (B, C), (C, B)](_.swap)(_.swap)(first(pab))
   }
+
+  trait Choice[P[_, _]] {
+    import Either._
+
+    val profunctor: Profunctor[P]
+
+    def left[A, B, C](pab: P[A, B]): P[A \/ C, B \/ C] =
+      profunctor.dimap[A \/ C, C \/ A, C \/ B, B \/ C](swap(_))(swap(_))(right(pab))
+
+    def right[A, B, C](pab: P[A, B]): P[C \/ A, C \/ B] =
+      profunctor.dimap[C \/ A, A \/ C, B \/ C, C \/ B](swap(_))(swap(_))(left(pab))
+  }
 }

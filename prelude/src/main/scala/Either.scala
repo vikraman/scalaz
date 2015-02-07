@@ -1,5 +1,7 @@
 package scalaz
 
+import Prelude._
+
 sealed abstract class Either[+A, +B]
 
 object Either {
@@ -8,9 +10,7 @@ object Either {
 
   def fromScala[A, B](ab: scala.Either[A, B]): Either[A, B] = ab.fold(Left(_), Right(_))
 
-  trait Types {
-    type \/[A, B] = Either[A, B]
-  }
+  def swap[A, B](ab: Either[A, B]): Either[B, A] = ???
 
   trait Syntax {
     implicit class EitherOps[A](a: A) {
