@@ -32,7 +32,7 @@ object IOSpec {
       Map(x => cast(f(reify[A](x)))) :: xs
 
     def apply[A, B, C](f: (A, B) => C)(ioa: IO[A], iob: IO[B]): Thunk =
-      Apply((a, b) => cast(reify[A](a) -> reify[B](b)), ioa.thunk, iob.thunk) :: Nil
+      Apply((a, b) => cast((reify[A](a), reify[B](b))), ioa.thunk, iob.thunk) :: Nil
 
     def fork[A](io: IO[A]): Thunk =
       Fork(_ => io.thunk) :: Nil

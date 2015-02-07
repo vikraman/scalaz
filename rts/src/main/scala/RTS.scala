@@ -87,7 +87,7 @@ object RTS {
             case Fork(f)  => setVal {
               val intrChild = intr.newChild
               def run = unsafePerformEval_(f(()).reverse, unit, Nil, intrChild)
-              cast(ThreadId(Future(run).flatMap(identity), intrChild))
+              cast(ThreadId(Future(run).flatMap(id), intrChild))
             }
 
             case Bind(f) =>
@@ -121,7 +121,7 @@ object RTS {
           }
         } catch { case e: Throwable =>
           catchers.foldRight(None: Option[(Thunk, State)]) { case ((f, state), res) =>
-            res.orElse(f(e).map(_ -> state))
+            res.orElse(f(e).map((_, state)))
           } match {
             case Some((recovery, (stateThunk, stateStack))) =>
               done = false

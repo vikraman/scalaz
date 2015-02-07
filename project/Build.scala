@@ -43,5 +43,5 @@ object ScalazBuild extends Build {
     base = file("rts")).settings(
     name := "scalaz-rts",
     libraryDependencies ++= testDeps
-  ).dependsOn(io, core % "test->test", std % "test->compile")
+  ).dependsOn(core, io, core % "test->test", std % "test->compile")
 }

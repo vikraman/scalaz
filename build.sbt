@@ -4,6 +4,12 @@ organization in ThisBuild := "scalaz"
 
 scalaVersion in ThisBuild := "2.11.5"
 
-scalacOptions in ThisBuild ++= Seq("-unchecked", "-Ywarn-adapted-args")
+scalacOptions in ThisBuild ++= Seq(
+  "-feature",
+  "-unchecked",
+  "-language:higherKinds",
+  "-Ywarn-adapted-args",
+  "-Yno-predef"
+)
 
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
