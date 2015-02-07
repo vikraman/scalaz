@@ -42,4 +42,16 @@ object Profunctor {
         UpStar(a => F.map(cd)(bfc.run(ab(a))))
     }
   }
+
+  final case class DownStar[F[_], A, B](run: F[A] => B)
+  object DowStar {
+    def profunctor[F[_]](implicit F: Functor[F]): Profunctor[DownStar[F, ?, ?]] = new Profunctor[DownStar[F, ?, ?]] {
+      override def lmap[A, B, C](k: A => B): DownStar[F, B, C] => DownStar[F, A, C] = fbc =>
+        DownStar(fb => fbc.run(F.map(k)(fb)))
+      override def rmap[A, B, C](k: B => C): DownStar[F, A, B] => DownStar[F, A, C] = fab =>
+        DownStar(fa => k(fab.run(fa)))
+      override def dimap[A, B, C, D](ab: A => B)(cd: C => D): DownStar[F, B, C] => DownStar[F, A, D] = fbc =>
+        DownStar(fb => cd(fbc.run(F.map(ab)(fb))))
+    }
+  }
 }
