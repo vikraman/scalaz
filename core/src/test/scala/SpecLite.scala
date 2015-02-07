@@ -1,5 +1,7 @@
 package scalaz
 
+import scala.language.implicitConversions
+import scala.Predef.{augmentString, classOf}
 import reflect.ClassTag
 
 import org.scalacheck._
@@ -108,7 +110,10 @@ abstract class SpecLite extends Properties("") {
 
   def prop[T, R](result: T => R)(implicit toProp: (=>R) => Prop, a: Arbitrary[T], s: Shrink[T]): Prop = check1(result)
   implicit def propToProp(p: => Prop): Prop = p
-  implicit def check1[T, R](result: T => R)(implicit toProp: (=>R) => Prop, a: Arbitrary[T], s: Shrink[T]): Prop = Prop.forAll((t: T) => toProp(result(t)))
+  implicit def check1[T, R](result: T => R)(implicit toProp: (=>R) => Prop, a: Arbitrary[T], s: Shrink[T]): Prop = {
+    implicit val f: Prop => Prop = id
+    Prop.forAll((t: T) => toProp(result(t)))
+  }
   implicit def unitToProp(u: => Unit): Prop = booleanToProp({u; true})
   implicit def unitToProp2(u: Unit): Prop = booleanToProp(true)
   implicit def booleanToProp(b: => Boolean): Prop = Prop.secure(b)

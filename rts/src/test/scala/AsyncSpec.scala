@@ -1,13 +1,11 @@
 package scalaz
 
-import std.AllInstances._
-
 import IO._
 import Async._
 
-import RTS.defaultRTS.unsafePerformIO_
+import system.IO._
 
-import TestUtils._
+import RTS.defaultRTS.unsafePerformIO_
 
 class AsyncSpec extends scalaz.SpecLite {
   "support wait" in {

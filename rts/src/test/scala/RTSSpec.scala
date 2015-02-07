@@ -2,14 +2,12 @@ package scalaz
 
 import scala.concurrent.Future
 
-import std.AllInstances._
-
 import IO._
 import Concurrent._
 
-import RTS.defaultRTS.unsafePerformIO_
+import system.IO._
 
-import TestUtils._
+import RTS.defaultRTS.unsafePerformIO_
 
 class RTSSpec extends scalaz.SpecLite {
 
