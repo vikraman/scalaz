@@ -7,3 +7,15 @@ trait Profunctor[F[_, _]] {
   def rmap[A, B, C](f: B => C): F[A, B] => F[A, C] = dimap[A, A, B, C](id)(f)
   def dimap[A, B, C, D](f: A => B)(g: C => D): F[B, C] => F[A, D] = lmap(f).andThen(rmap(g))
 }
+
+object Profunctor {
+  trait Strong[P[_, _]] {
+    val profunctor: Profunctor[P]
+
+    def first[A, B, C](pab: P[A, B]): P[(A, C), (B, C)] =
+      profunctor.dimap[(A, C), (C, A), (C, B), (B, C)](_.swap)(_.swap)(second(pab))
+
+    def second[A, B, C](pab: P[A, B]): P[(C, A), (C, B)] =
+      profunctor.dimap[(C, A), (A, C), (B, C), (C, B)](_.swap)(_.swap)(first(pab))
+  }
+}
