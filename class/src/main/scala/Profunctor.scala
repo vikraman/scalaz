@@ -1,5 +1,7 @@
 package scalaz
 
+import Prelude._
+
 trait Profunctor[F[_, _]] {
   def lmap[A, B, C](f: A => B): F[B, C] => F[A, C] = dimap[A, B, C, C](f)(id)
   def rmap[A, B, C](f: B => C): F[A, B] => F[A, C] = dimap[A, A, B, C](id)(f)

@@ -7,3 +7,5 @@ trait Prelude {
 
   def id[A](x: A): A = x
 }
+
+object Prelude extends Prelude
