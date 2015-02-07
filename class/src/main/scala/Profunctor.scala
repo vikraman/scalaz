@@ -30,4 +30,16 @@ object Profunctor {
     def right[A, B, C](pab: P[A, B]): P[C \/ A, C \/ B] =
       profunctor.dimap[C \/ A, A \/ C, B \/ C, C \/ B](swap(_))(swap(_))(left(pab))
   }
+
+  final case class UpStar[F[_], A, B](run: A => F[B])
+  object UpStar {
+    def profunctor[F[_]](implicit F: Functor[F]): Profunctor[UpStar[F, ?, ?]] = new Profunctor[UpStar[F, ?, ?]] {
+      override def lmap[A, B, C](k: A => B): UpStar[F, B, C] => UpStar[F, A, C] = f =>
+        UpStar(a => f.run(k(a)))
+      override def rmap[A, B, C](k: B => C): UpStar[F, A, B] => UpStar[F, A, C] = f =>
+        UpStar(a => F.map(k)(f.run(a)))
+      override def dimap[A, B, C, D](ab: A => B)(cd: C => D): UpStar[F, B, C] => UpStar[F, A, D] = bfc =>
+        UpStar(a => F.map(cd)(bfc.run(ab(a))))
+    }
+  }
 }
