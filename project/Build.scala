@@ -8,7 +8,7 @@ object ScalazBuild extends Build {
   lazy val root = Project(
     id = "root",
     base = file(".")
-  ).aggregate(prelude, core, clazz, data, io, rts)
+  ).aggregate(prelude, core, clazz, data, io, rts, examples)
 
   lazy val prelude = Project(
     id = "prelude",
@@ -51,4 +51,11 @@ object ScalazBuild extends Build {
     name := "scalaz-rts",
     libraryDependencies ++= testDeps
   ).dependsOn(core, io, core % "test->test")
+
+  lazy val examples = Project(
+    id = "examples",
+    base = file("examples")).settings(
+    name := "scalaz-examples",
+    libraryDependencies ++= testDeps
+  ).dependsOn(core, rts)
 }
