@@ -1,6 +1,6 @@
-package scalaz 
+package scalaz
 
-trait Applicative[F[_]] {
-  val apply: Apply[F]
+abstract class Applicative[F[_]] {
+  def apply: Apply[F]
   def pure[A](a: A): F[A]
 }

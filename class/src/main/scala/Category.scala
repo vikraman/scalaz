@@ -1,6 +1,6 @@
 package scalaz
 
-trait Category[~>[_, _]] {
-  val semigroupoid: Semigroupoid[~>]
+abstract class Category[~>[_, _]] {
+  def semigroupoid: Semigroupoid[~>]
   def id[A]: A ~> A
 }

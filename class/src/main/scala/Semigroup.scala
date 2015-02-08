@@ -1,5 +1,5 @@
 package scalaz
 
-trait Semigroup[A] {
+abstract class Semigroup[A] {
   def op[A]: A => A => A
 }

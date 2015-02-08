@@ -1,6 +1,6 @@
 package scalaz
 
-trait Bounded[A] {
+abstract class Bounded[A] {
   def min: A
   def max: A
 }

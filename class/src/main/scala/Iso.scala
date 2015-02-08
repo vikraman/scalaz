@@ -1,6 +1,6 @@
 package scalaz
 
-trait Iso[S, T, A, B] {
+abstract class Iso[S, T, A, B] {
   def apply[P[_, _], F[_]](p: P[A, F[B]])(implicit F: Functor[F], P: Profunctor[P]): P[S, F[T]]
 }
 

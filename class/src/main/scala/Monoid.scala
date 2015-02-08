@@ -1,6 +1,6 @@
 package scalaz
 
-trait Monoid[A] {
-  val semigroup: Semigroup[A]
-  val unit: A
+abstract class Monoid[A] {
+  def semigroup: Semigroup[A]
+  def unit: A
 }

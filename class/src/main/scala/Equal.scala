@@ -1,6 +1,6 @@
 package scalaz
 
-trait Equal[A] {
+abstract class Equal[A] {
   def equal(a1: A, a2: A): Boolean
 }
 

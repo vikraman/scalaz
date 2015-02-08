@@ -1,6 +1,6 @@
 package scalaz
 
-trait Show[A] {
+abstract class Show[A] {
   def show(a: A): String
 }
 

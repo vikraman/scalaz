@@ -8,14 +8,10 @@ abstract class Traversal[S, T, A, B] {
 
 object Traversal {
 
-  trait Types {
-    type Traversal_[S, A] = Traversal[S, S, A, A]
-  }
+  trait Types { type Traversal_[S, A] = Traversal[S, S, A, A] }
   object Types extends Types
 
-  trait Compose[I, O, S, T, A, B] {
-    def apply(lens: Traversal[S, T, A, B]): I => O
-  }
+  trait Compose[I, O, S, T, A, B] { def apply(lens: Traversal[S, T, A, B]): I => O }
 
   object Compose {
     implicit def lens[S, T, A, B, C, D]: Compose[Lens[A, B, C, D], Traversal[S, T, C, D], S, T, A, B] =

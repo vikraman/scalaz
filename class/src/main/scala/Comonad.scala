@@ -1,6 +1,6 @@
 package scalaz
 
-trait Comonad[F[_]] {
-  val extend: Extend[F]
+abstract class Comonad[F[_]] {
+  def extend: Extend[F]
   def extract[A]: F[A] => A
 }
