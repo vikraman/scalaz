@@ -35,5 +35,11 @@ object Lens {
           def apply[F[_]](afb: C => F[D])(implicit F: Applicative[F]): S => F[T] = stab.apply(abcd(afb))(F.apply.functor)
         }
       }
+
+    implicit def prism[S, T, A, B, C, D]: Compose[Prism[A, B, C, D], Traversal[S, T, C, D], S, T, A, B] =
+      new Compose[Prism[A, B, C, D], Traversal[S, T, C, D], S, T, A, B] {
+        def apply(stab: Lens[S, T, A, B]): Prism[A, B, C, D] => Traversal[S, T, C, D] = abcd =>
+          traversal[S, T, A, B, C, D](stab)(abcd.asTraversal)
+      }
   }
 }
