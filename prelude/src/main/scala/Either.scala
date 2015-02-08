@@ -19,7 +19,7 @@ object Either {
 
   trait Syntax {
     implicit class EitherOps[A, B](ab: Either[A, B]) {
-      def fold[C](l: A => C, r: B => C): C = either(l)(r)(ab)
+      def fold[C](l: A => C)(r: B => C): C = either(l)(r)(ab)
     }
     implicit class ToEitherOps[A](a: A) {
       def left[B]: Either[A, B] = Left(a)
@@ -28,4 +28,6 @@ object Either {
 
     implicit class EitherAsScalaz[A, B](ab: scala.Either[A, B]) { def asScalaz: Either[A, B] = fromScala(ab) }
   }
+  object Syntax extends Syntax
 }
+
