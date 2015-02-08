@@ -7,10 +7,14 @@ import Either._
 import Profunctor._
 import Optic.Types._
 
-abstract class Prism[S, T, A, B] {
+abstract class Prism[S, T, A, B] { self =>
   def apply[P[_, _], F[_]](pafb: P[A, F[B]])(implicit P: Profunctor.Choice[P], F: Applicative[F]): P[S, F[T]]
 
   def asOptic[P[_, _], F[_]](implicit P: Profunctor.Choice[P], F: Applicative[F]): Optic[P, F, S, T, A, B] = apply(_)
+
+  def asTraversal: Traversal[S, T, A, B] = new Traversal[S, T, A, B] {
+    def apply[F[_]](afb: A => F[B])(implicit F: Applicative[F]): S => F[T] = self(afb)
+  }
 }
 
 object Prism {
