@@ -8,6 +8,8 @@ trait Prelude {
   type \/[A, B] = Either[A, B]
 
   def ???[A]: A = sys.error("Not implemented yet.")
+
+  def const[A, B](a: A): B => A = _ => a
   def id[A](x: A): A = x
 }
 
