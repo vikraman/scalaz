@@ -9,7 +9,8 @@ import Optic.Types._
 
 abstract class Prism[S, T, A, B] {
   def apply[P[_, _], F[_]](pafb: P[A, F[B]])(implicit P: Profunctor.Choice[P], F: Applicative[F]): P[S, F[T]]
-  def optic[P[_, _], F[_]](implicit P: Profunctor.Choice[P], F: Applicative[F]): Optic[P, F, S, T, A, B] = apply(_)
+
+  def asOptic[P[_, _], F[_]](implicit P: Profunctor.Choice[P], F: Applicative[F]): Optic[P, F, S, T, A, B] = apply(_)
 }
 
 object Prism {
