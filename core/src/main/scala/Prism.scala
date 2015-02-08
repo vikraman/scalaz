@@ -3,6 +3,7 @@ package scalaz
 import Prelude._
 
 import Either._
+import Maybe._
 
 import Profunctor._
 import Optic.Types._
@@ -24,6 +25,16 @@ object Prism {
         .apply(P.right[A, F[B], T](pafb))
     }
   }
+
+  def prismM[S, A, B](bs: B => S)(sma: S => Maybe[A]): Prism[S, S, A, B] =
+    prism[S, S, A, B](bs)(s => maybe[A, S \/ A](Left(s))(Right(_))(sma(s)))
+
+  def _just[A]: Prism_[Maybe[A], A] = _Just[A, A]
+  def _Just[A, B]: Prism[Maybe[A], Maybe[B], A, B] =
+    prism[Maybe[A], Maybe[B], A, B](Just(_))(maybe[A, Maybe[B] \/ A](Left(Empty()))(Right(_)))
+
+  def _Empty[A, B]: Prism_[Maybe[A], Unit] =
+    prismM[Maybe[A], Unit, Unit](const(Empty()))(maybe[A, Maybe[Unit]](Just(()))(const(Empty())))
 
   trait Types {
     type Prism_[S, A] = Prism[S, S, A, A]
