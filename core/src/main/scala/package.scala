@@ -3,3 +3,4 @@ package object scalaz extends
   with Either.Syntax
   with Lens.Types
   with Prism.Types
+  with Traversal.Types
