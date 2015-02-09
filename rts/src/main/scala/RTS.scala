@@ -1,8 +1,6 @@
 package scalaz
 
 import Either._
-import SList._
-import Option._
 
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
@@ -26,7 +24,7 @@ object RTS {
   val defaultRTS: RTS = RTS(ExecutionContext.Implicits.global, globalInterruptor)
 
   def newInterruptor: Interruptor = new Interruptor {
-    @scala.volatile
+    @volatile
     private var _interrupted = false
     private var _children: List[Interruptor] = Nil
     def kill: Unit = _interrupted = true

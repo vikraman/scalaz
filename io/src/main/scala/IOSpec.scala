@@ -1,12 +1,6 @@
 package scalaz
 
-import Prelude._
-import YOLO.Any
-import SList._
-import Option._
-
 import scala.concurrent.Future
-import scala.{Error, List}
 
 object IOSpec {
   case class  ThreadId(future: Future[Val], intr: Interruptor)

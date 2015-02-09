@@ -2,7 +2,7 @@ package scalaz
 
 import scala.language.implicitConversions
 import scala.Predef.{augmentString, classOf}
-import scala.reflect.ClassTag
+import reflect.ClassTag
 
 import org.scalacheck._
 import org.scalacheck.Prop.Result
@@ -39,7 +39,7 @@ abstract class SpecLite extends Properties("") {
   private var context: String = ""
 
   class StringOps(s: String) {
-    def should[A](a: => scala.Any): Unit = {
+    def should[A](a: => Any): Unit = {
       val saved = context
       context = s; try a finally context = saved
     }
@@ -55,7 +55,7 @@ abstract class SpecLite extends Properties("") {
     x must_==(true)
   }
 
-  def fail(msg: String): Nothing = throw new java.lang.AssertionError(msg)
+  def fail(msg: String): Nothing = throw new AssertionError(msg)
   class AnyOps[A](actual: => A) {
     def must_===(expected: A)(implicit Show: Show[A], Equal: Equal[A]): Unit = {
       val act = actual
@@ -73,7 +73,7 @@ abstract class SpecLite extends Properties("") {
         fail(koMessage)
     }
 
-    def mustMatch(f: YOLO.PartialFunction[A, Boolean]): Unit = {
+    def mustMatch(f: PartialFunction[A, Boolean]): Unit = {
       val act = actual
       def test = f.isDefinedAt(act) && f(act)
       def koMessage = "%s does not satisfy partial function".format(act)

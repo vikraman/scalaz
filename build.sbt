@@ -10,7 +10,6 @@ scalacOptions in ThisBuild ++= Seq(
   "-unchecked",
   "-language:higherKinds",
   "-Ywarn-adapted-args",
-  "-Yno-imports",
   "-Yno-predef"
 )
 

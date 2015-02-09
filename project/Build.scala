@@ -23,7 +23,7 @@ object ScalazBuild extends Build {
   lazy val core = scalazPrj("core").dependsOn(prelude, clazz)
   lazy val clazz = scalazPrj("class").dependsOn(prelude)
 
-  lazy val io = scalazPrj("io").dependsOn(prelude)
+  lazy val io = scalazPrj("io")
   lazy val rts = scalazPrj("rts").dependsOn(core, io, core % "test->test")
 
   lazy val examples = scalazPrj("examples").dependsOn(core, rts)

@@ -1,6 +1,5 @@
 package scalaz
 
-import Prelude._
 import IOSpec._
 
 case class IO[A] (thunk: Thunk) extends AnyVal {
