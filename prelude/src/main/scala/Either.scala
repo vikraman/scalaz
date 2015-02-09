@@ -13,7 +13,7 @@ object Either {
     case Right(r) => bc(r)
   }
 
-  def swap[A, B](ab: Either[A, B]): Either[B, A] = ???
+  def swap[A, B](ab: Either[A, B]): Either[B, A] = either[A, B, Either[B, A]](Right(_))(Left(_))(ab)
 
   def fromScala[A, B](ab: scala.Either[A, B]): Either[A, B] = ab.fold(Left(_), Right(_))
 
