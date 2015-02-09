@@ -1,7 +1,8 @@
 package scalaz
 
 import scala.annotation.implicitNotFound
-import scalaz.Either._
+import Either._
+import SList._
 
 object Optic extends
        Lens.Functions

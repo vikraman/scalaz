@@ -1,5 +1,7 @@
 package scalaz
 
+import Prelude._
+
 abstract class Show[A] {
   def show(a: A): String
 }

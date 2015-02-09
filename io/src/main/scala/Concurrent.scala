@@ -1,5 +1,8 @@
 package scalaz
 
+import Prelude._
+
+import scala.{Seq, Nil}
 import scala.concurrent.Future
 
 import IOSpec.Thunk

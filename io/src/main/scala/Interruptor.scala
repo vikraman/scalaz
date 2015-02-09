@@ -1,5 +1,7 @@
 package scalaz
 
+import Prelude._
+
 trait Interruptor {
   def kill: Unit
   def interrupted: Boolean

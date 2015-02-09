@@ -16,7 +16,7 @@ class RTSSpec extends scalaz.SpecLite {
     def task(n: Int): IO[Unit] = if (n == 0) unitIO else unitIO *> task(n - 1)
 
     val size = 65535
-    foo(size).mustThrowA[StackOverflowError]
+    foo(size).mustThrowA[java.lang.StackOverflowError]
 
     val main = task(size)
 

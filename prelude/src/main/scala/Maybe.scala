@@ -1,5 +1,7 @@
 package scalaz
 
+import Option._
+
 sealed abstract class Maybe[A]
 
 object Maybe {

@@ -1,6 +1,8 @@
 package scalaz
 
+import Prelude._
 import scala.concurrent.Future
+import scala.{List, Nil}
 
 import Concurrent._
 import IO._

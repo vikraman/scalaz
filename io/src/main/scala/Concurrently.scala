@@ -1,5 +1,7 @@
 package scalaz
 
+import Prelude._
+
 import IOSpec.Thunk
 
 case class Concurrently[A](thunk: Thunk) extends AnyVal {
