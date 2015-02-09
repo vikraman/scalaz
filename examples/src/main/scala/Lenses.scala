@@ -1,8 +1,8 @@
 package acme
 
 import scalaz._
-import Lens._
-import Prism._
+
+import Optic._
 
 package object lenses {
   case class User(_name: String, _age: Int)

@@ -9,9 +9,11 @@ abstract class Lens[S, T, A, B] {
 object Lens {
   trait Types { type Lens_[S, A] = Lens[S, S, A, A] }
 
-  def lens[S, T, A, B](sa: S => A)(sbt: S => B => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
-    def apply[F[_]](afb: A => F[B])(implicit F: Functor[F]): S => F[T] = s => F.map(sbt(s))(afb(sa(s)))
-  }
+  trait Functions {
+    def lens[S, T, A, B](sa: S => A)(sbt: S => B => T): Lens[S, T, A, B] = new Lens[S, T, A, B] {
+      def apply[F[_]](afb: A => F[B])(implicit F: Functor[F]): S => F[T] = s => F.map(sbt(s))(afb(sa(s)))
+    }
 
-  def slens[S, A](sa: S => A)(sas: S => A => S): Lens[S, S, A, A] = lens[S, S, A, A](sa)(sas)
+    def slens[S, A](sa: S => A)(sas: S => A => S): Lens[S, S, A, A] = lens[S, S, A, A](sa)(sas)
+  }
 }

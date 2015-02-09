@@ -1,8 +1,15 @@
 package scalaz
 
-object Optic {
+import scala.annotation.implicitNotFound
+import scalaz.Either._
+
+object Optic extends
+       Lens.Functions
+  with Prism.Functions
+  with Traversal.Functions {
 
   trait Types {
+    type Cons_[S, A] = Cons[S, S, A, A]
     type Optic[P[_, _], F[_], S, T, A, B] = P[A, F[B]] => P[S, F[T]]
     type Optic_[P[_, _], F[_], S, A] = Optic[P, F, S, S, A, A]
 
@@ -12,6 +19,17 @@ object Optic {
 
   object Types extends Types
 
+  final case class Cons[S, T, A, B](value: Prism[S, T, (A, S), (B, T)])
+
+  object Cons {
+    implicit def list[A, B]: Cons[List[A], List[B], A, B] =
+      Cons(prism[List[A], List[B], (A, List[A]), (B, List[B])] { case (b, bs) => b :: bs } (_ match {
+        case a::as  => Right((a, as))
+        case Nil    => Left(Nil)
+      }))
+  }
+
+  @implicitNotFound("Can not compose `${O}` with `${U}`.")
   abstract class Compose[O[_, _, _, _], U, V, S, T, A, B] { def apply(lens: O[S, T, A, B]): U => V }
 
   type Compose_[O[_, _, _, _], P[_, _, _, _], Q[_, _, _, _], S, T, A, B, C, D] =

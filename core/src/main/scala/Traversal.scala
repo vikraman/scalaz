@@ -7,7 +7,12 @@ abstract class Traversal[S, T, A, B] {
 }
 
 object Traversal {
-
-  trait Types { type Traversal_[S, A] = Traversal[S, S, A, A] }
+  trait Types {
+    type Traversal_[S, A] = Traversal[S, S, A, A]
+  }
   object Types extends Types
+
+  trait Functions {
+    def _head[F[_], A]: Traversal_[F[A], A] =
+  }
 }
