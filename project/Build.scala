@@ -17,7 +17,7 @@ object ScalazBuild extends Build {
   lazy val root = Project(
     id = "root",
     base = file(".")
-  ).aggregate(prelude, core, clazz, io, rts, examples)
+  ).aggregate(prelude, core, clazz, io, rts, meta, examples)
 
   lazy val prelude = scalazPrj("prelude")
   lazy val core = scalazPrj("core").dependsOn(prelude, clazz)
@@ -26,5 +26,12 @@ object ScalazBuild extends Build {
   lazy val io = scalazPrj("io")
   lazy val rts = scalazPrj("rts").dependsOn(core, io, core % "test->test")
 
-  lazy val examples = scalazPrj("examples").dependsOn(core, rts)
+  lazy val meta = scalazPrj("meta").dependsOn(clazz, core).settings(
+    libraryDependencies ++= Seq(
+      "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
+      "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
+    )
+  )
+
+  lazy val examples = scalazPrj("examples").dependsOn(core, rts, meta)
 }
