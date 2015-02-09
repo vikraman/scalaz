@@ -2,7 +2,6 @@ package scalaz
 
 trait Prelude {
   type =:=[A, B] = scala.Predef.=:=[A, B]
-  type ->[A, B] = scala.Predef.Function[A, B]
   type <:<[A, B] = scala.Predef.<:<[A, B]
   type ~[P[_, _], Q[_, _]] = P[Nothing, Nothing] =:= Q[Nothing, Nothing]
   type \/[A, B] = Either[A, B]
@@ -13,6 +12,7 @@ trait Prelude {
   type AnyVal = scala.AnyVal
   type Array[A] = scala.Array[A]
   type Boolean = scala.Boolean
+  type Function[A, B] = scala.Predef.Function[A, B]
   type Int = scala.Int
   type Nothing = scala.Nothing
   type String = java.lang.String

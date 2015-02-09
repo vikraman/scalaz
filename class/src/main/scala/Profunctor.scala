@@ -11,7 +11,7 @@ abstract class Profunctor[F[_, _]] {
 }
 
 object Profunctor {
-  implicit val fun: Profunctor[->] = new Profunctor[->] {
+  implicit val fun: Profunctor[Function] = new Profunctor[Function] {
     override def lmap[A, B, C](ab: A => B): (B => C) => (A => C) = bc => a => bc(ab(a))
     override def rmap[A, B, C](bc: B => C): (A => B) => (A => C) = ab => a => bc(ab(a))
     override def dimap[A, B, C, D](ab: A => B)(cd: C => D): (B => C) => (A => D) = bc => a => cd(bc(ab(a)))
@@ -40,7 +40,7 @@ object Profunctor {
   }
 
   object Choice {
-    implicit val fun: Choice[->] = new Choice[->] {
+    implicit val fun: Choice[Function] = new Choice[Function] {
       val profunctor = Profunctor.fun
       override def left[A, B, C](ab: A => B): A \/ C => B \/ C  = _.fold[B \/ C](a => Left(ab(a)))(Right(_))
       override def right[A, B, C](ab: A => B): C \/ A => C \/ B = _.fold[C \/ B](Left(_))((a => Right(ab(a))))
