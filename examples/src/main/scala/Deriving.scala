@@ -8,7 +8,7 @@ object Demo {
   case object Bar extends Foo
   case object Baz extends Foo
 
-  val enum: Enum[Foo] = Deriving.mkEnum[Foo]
+  implicit val enum: Enum[Foo] = Deriving.mkEnum[Foo]
 
   // scala> acme.deriving.Demo.enum.all
   // res0: List[acme.deriving.Demo.Foo] = List(Bar, Baz)
