@@ -8,6 +8,7 @@ scalacOptions in ThisBuild ++= Seq(
   "-deprecation",
   "-feature",
   "-unchecked",
+  "-language:implicitConversions",
   "-language:higherKinds",
   "-Ywarn-adapted-args",
   "-Yno-predef"

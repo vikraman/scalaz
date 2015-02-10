@@ -1,6 +1,5 @@
 package scalaz
 
-import scala.language.implicitConversions
 import scala.Predef.{augmentString, classOf}
 import reflect.ClassTag
 
