@@ -18,7 +18,7 @@ object Profunctor {
   }
 
   trait Strong[P[_, _]] {
-    def profunctor: Profunctor[P]
+    implicit def profunctor: Profunctor[P]
 
     def first[A, B, C](pab: P[A, B]): P[(A, C), (B, C)] =
       profunctor.dimap[(A, C), (C, A), (C, B), (B, C)](_.swap)(_.swap)(second(pab))
@@ -30,7 +30,7 @@ object Profunctor {
   trait Choice[P[_, _]] {
     import Either._
 
-    def profunctor: Profunctor[P]
+    implicit def profunctor: Profunctor[P]
 
     def left[A, B, C](pab: P[A, B]): P[A \/ C, B \/ C] =
       profunctor.dimap[A \/ C, C \/ A, C \/ B, B \/ C](swap(_))(swap(_))(right(pab))
