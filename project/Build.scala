@@ -3,7 +3,10 @@ import Keys._
 
 object ScalazBuild extends Build {
 
-  def testDeps = Seq("org.scalacheck" %% "scalacheck" % "1.11.6" % "test")
+  val testDeps = Seq("org.scalacheck" %% "scalacheck" % "1.11.6" % "test")
+
+  val paradiseVersion = "2.1.0-M5"
+  val paradisePlugin = compilerPlugin("org.scalamacros" %  "paradise" % paradiseVersion cross CrossVersion.full)
 
   def scalazPrj(prjName: String) = Project(
     id = prjName,
@@ -13,6 +16,7 @@ object ScalazBuild extends Build {
       compilerPlugin("org.spire-math" %% "kind-projector" % "0.5.2")
     )
   )
+
 
   lazy val root = Project(
     id = "root",
@@ -30,8 +34,11 @@ object ScalazBuild extends Build {
     libraryDependencies ++= Seq(
       "org.scala-lang"  %  "scala-reflect"  % scalaVersion.value,
       "org.scala-lang"  %  "scala-compiler" % scalaVersion.value % "provided"
-    )
+    ),
+    addCompilerPlugin(paradisePlugin)
   )
 
-  lazy val examples = scalazPrj("examples").dependsOn(core, rts, meta)
+  lazy val examples = scalazPrj("examples").dependsOn(core, rts, meta).settings(
+    addCompilerPlugin(paradisePlugin)
+  )
 }
