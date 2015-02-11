@@ -35,7 +35,7 @@ object Deriving {
 
     def mkReduce(tpe: Type): Tree = {
       val fields = tpe.decls.collectFirst {
-        case m: MethodSymbol if m.isPrimaryConstructor ⇒ m
+        case m: MethodSymbol if m.isPrimaryConstructor => m
       }.get.paramLists.head
 
       val injects = fields.map { sym =>
