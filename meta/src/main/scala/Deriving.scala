@@ -23,7 +23,6 @@ object Deriving {
 
     // TODO Add logic for sumtypes
     if (internal.isSealed) c.abort(c.enclosingPosition, "Sum types are not yet supported.")
-
     // TODO Why this does not work? /ask @xeno_by
     //def typeCons[T: WeakTypeTag] = weakTypeOf[T].typeConstrutor
 
@@ -65,6 +64,7 @@ object Deriving {
       )
     }
 
+
     c.Expr[TC[T]](Block(
       List(q"val derivable = $derivable"),
       Apply(
@@ -73,25 +73,25 @@ object Deriving {
             Select(Ident(TermName("derivable")), TermName("instance")),
             List(TypeTree(weakTypeOf[T]))
           ),
-          List(
-            Function(
-              List(ValDef(Modifiers(PARAM), TermName("b"), TypeTree(), EmptyTree)),
-              Apply(
-                TypeApply(
-                  Select(Ident(TermName("derivable")), TermName("reduce")),
-                  List(TypeTree(weakTypeOf[T]))
-                ),
-                List(
-                  Apply(
-                    Select(Ident(TermName("List")), TermName("apply")),
-                    injects
-                  )
+          List(Literal(Constant(tpe.typeSymbol.name.toString)))
+        ),
+        List(
+          Function(
+            List(ValDef(Modifiers(PARAM), TermName("b"), TypeTree(), EmptyTree)),
+            Apply(
+              TypeApply(
+                Select(Ident(TermName("derivable")), TermName("reduce")),
+                List(TypeTree(weakTypeOf[T]))
+              ),
+              List(
+                Apply(
+                  Select(Ident(TermName("List")), TermName("apply")),
+                  injects
                 )
               )
             )
           )
-        ),
-        List(q"implicitly")
+        )
       )
     ))
   }
