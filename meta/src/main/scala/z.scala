@@ -12,8 +12,6 @@ object z {
     import c.universe._
     import c.universe.Flag._
 
-    import scala.Predef.println
-
     val transform: DefDef => DefDef = _ match {
       case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
         val vals = vparamss.flatMap(id).filter(_.mods.hasFlag(IMPLICIT))
@@ -25,7 +23,7 @@ object z {
           tpe.decls.collect { case m: MethodSymbol if m.isImplicit =>
             val n = s"${v.name}_${m.name}"
             val i = Select(Ident(v.name), m.name)
-            ValDef(Modifiers(IMPLICIT), TermName(n), TypeTree(), i)
+            DefDef(Modifiers(IMPLICIT), TermName(n), List(), List(), TypeTree(), i)
           }
         }
 
@@ -46,7 +44,6 @@ object z {
         ModuleDef(mods, name, transformTmp(tmp))
       case d: DefDef => transform(d)
       case tree =>
-        println(showRaw(tree))
         c.warning(c.enclosingPosition, "The annotation have no effect here.")
         tree
     })
