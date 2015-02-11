@@ -17,53 +17,74 @@ object Deriving {
   ): c.Expr[TC[T]] = {
     import c.universe._
     import c.universe.Flag._
-    val tpe = weakTypeOf[T]
-    val symbol = tpe.typeSymbol
-    val internal = symbol.asInstanceOf[scala.reflect.internal.Symbols#Symbol]
 
-    // TODO Add logic for sumtypes
-    if (internal.isSealed) c.abort(c.enclosingPosition, "Sum types are not yet supported.")
-    // TODO Why this does not work? /ask @xeno_by
-    //def typeCons[T: WeakTypeTag] = weakTypeOf[T].typeConstrutor
+    val rootType = weakTypeOf[T]
+    val rootSymbol = rootType.typeSymbol
+    val internal = rootSymbol.asInstanceOf[scala.reflect.internal.Symbols#Symbol]
+
+    def typeCons[T: c.WeakTypeTag] = weakTypeOf[T].typeConstructor
 
     val derivable = c.inferImplicitValue(appliedType(
-      typeOf[Derivable[Nothing, Nothing, Nothing]].typeConstructor,
-      List(weakTypeOf[TC[Nothing]].typeConstructor, weakTypeOf[S[Nothing, Nothing]].typeConstructor, weakTypeOf[A].typeConstructor)
+      typeCons[Derivable[Nothing, Nothing, Nothing]],
+      List(typeCons[TC[Nothing]], typeCons[S[Nothing, Nothing]], typeCons[A])
     ))
 
-    val fields = tpe.decls.collectFirst {
-      case m: MethodSymbol if m.isPrimaryConstructor ⇒ m
-    }.get.paramLists.head
+    val descendants = if (internal.isSealed) {
+      internal.sealedDescendants.map(_.asInstanceOf[Symbol]).filterNot(_ == rootSymbol).toList
+    } else Nil
 
-    import scala.Predef.println
+    def mkReduce(tpe: Type): Tree = {
+      val fields = tpe.decls.collectFirst {
+        case m: MethodSymbol if m.isPrimaryConstructor ⇒ m
+      }.get.paramLists.head
 
-    //val descendants = internal.sealedDescendants.map(_.asInstanceOf[Symbol])
+      val injects = fields.map { sym =>
+        val injectType = if (sym.typeSignature <:< rootType) rootType else sym.typeSignature
+        val injectInstanceType = appliedType(weakTypeOf[TC[Nothing]].typeConstructor, injectType)
+        val injectInstance = c.inferImplicitValue(injectInstanceType)
 
-    val injects = fields.map { sym =>
-      val injectType = sym.typeSignature
-      val injectInstanceType = appliedType(weakTypeOf[TC[Nothing]].typeConstructor, injectType)
-      val injectInstance = c.inferImplicitValue(injectInstanceType)
+        if (injectInstance.isEmpty) {
+          val tc = appliedType(weakTypeOf[TC[Nothing]]).typeConstructor
+          c.abort(c.enclosingPosition, s"Could not resolve `${injectInstanceType}` instance.")
+        }
 
-      if (injectInstance.isEmpty) {
-        val tc = appliedType(weakTypeOf[TC[Nothing]]).typeConstructor
-        c.abort(c.enclosingPosition, s"Could not resolve `${injectInstanceType}` instance.")
+
+        Apply(
+          Select(
+            Apply(
+              TypeApply(
+                Select(Ident(TermName("derivable")), TermName("inject")),
+                List(TypeTree(injectType))
+              ),
+              List(injectInstance)
+            ),
+            TermName("apply")
+          ),
+          List(Select(Ident(TermName("b")), sym.name))
+        )
       }
 
       Apply(
-        Select(
-          Apply(
-            TypeApply(
-              Select(Ident(TermName("derivable")), TermName("inject")),
-              List(TypeTree(injectType))
-            ),
-            List(injectInstance)
-          ),
-          TermName("apply")
+        TypeApply(
+          Select(Ident(TermName("derivable")), TermName("reduce")),
+          List(TypeTree(weakTypeOf[T]))
         ),
-        List(Select(Ident(TermName("b")), sym.name))
+        List(Apply(Select(Ident(TermName("List")), TermName("apply")), injects))
       )
     }
 
+    def mkDerivableCase(sym: Symbol): CaseDef = {
+      CaseDef(
+        Bind(TermName("b"), Typed(Ident(termNames.WILDCARD), Ident(sym))),
+        EmptyTree,
+        mkReduce(sym.typeSignature)
+      )
+    }
+
+    val body =
+      if (internal.isSealed)
+        Match(Ident(TermName("b")), descendants.map(mkDerivableCase(_)))
+      else mkReduce(rootType)
 
     c.Expr[TC[T]](Block(
       List(q"val derivable = $derivable"),
@@ -73,23 +94,12 @@ object Deriving {
             Select(Ident(TermName("derivable")), TermName("instance")),
             List(TypeTree(weakTypeOf[T]))
           ),
-          List(Literal(Constant(tpe.typeSymbol.name.toString)))
+          List(Literal(Constant(rootType.typeSymbol.name.toString)))
         ),
         List(
           Function(
             List(ValDef(Modifiers(PARAM), TermName("b"), TypeTree(), EmptyTree)),
-            Apply(
-              TypeApply(
-                Select(Ident(TermName("derivable")), TermName("reduce")),
-                List(TypeTree(weakTypeOf[T]))
-              ),
-              List(
-                Apply(
-                  Select(Ident(TermName("List")), TermName("apply")),
-                  injects
-                )
-              )
-            )
+            body
           )
         )
       )
