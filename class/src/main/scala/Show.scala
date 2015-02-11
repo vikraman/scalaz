@@ -18,6 +18,7 @@ object Show {
   import scala.language.implicitConversions
 
   implicit def list[A: Show]: Show[List[A]] = mkShow(_.map(show(_)).mkString("(", ", ", ")"))
+  implicit def option[A: Show]: Show[Option[A]] = mkShow(_.fold("None")(a => s"Some(${show(a)}"))
   implicit def tuple2[A](implicit showA: Show[A]): Show[(A, A)] =
     mkShow { case (a1, a2) => (showA.show(a1), showA.show(a2)).toString }
 }
