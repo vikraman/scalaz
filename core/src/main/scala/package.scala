@@ -3,5 +3,6 @@ package object scalaz extends
   with Either.Syntax
   with Functor.Syntax
   with Lens.Types
+  with Ord.Syntax
   with Prism.Types
   with Traversal.Types
