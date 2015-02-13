@@ -11,6 +11,11 @@ trait Prelude {
   def implicitly[A](implicit a: A): A = a
 
   type Function[A, B] = scala.Predef.Function[A, B]
+  type Lazy[A] = Unit => A
+
+  implicit class LazyOps[A](la: Lazy[A]) {
+    def force: A = la.apply(())
+  }
 }
 
 object Prelude extends Prelude
