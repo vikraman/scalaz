@@ -10,6 +10,12 @@ object Show {
 
   def show[A](a: A)(implicit A: Show[A]): String = A.show(a)
 
+  trait Syntax {
+    implicit class ShowOps[A](a: A)(implicit A: Show[A]) {
+      def show: String = A.show(a)
+    }
+  }
+
   implicit val boolean: Show[Boolean] = mkShowFromToString
   implicit val int: Show[Int] = mkShowFromToString
   implicit val throwable: Show[Throwable] = mkShowFromToString
