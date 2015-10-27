@@ -20,10 +20,12 @@ trait LiftIO[F[_]]  { self =>
 object LiftIO {
   @inline def apply[F[_]](implicit F: LiftIO[F]): LiftIO[F] = F
 
+  import IdT._
+
   ////
   implicit def idTLiftIO[F[_]: LiftIO] =
     new LiftIO[IdT[F, ?]] {
-      def liftIO[A](ioa: IO[A]) = IdT(LiftIO[F].liftIO(ioa))
+      def liftIO[A](ioa: IO[A]) = LiftIO[F].liftIO(ioa)
     }
 
   implicit def listTLiftIO[F[_]: LiftIO] =
@@ -41,7 +43,7 @@ object LiftIO {
       def liftIO[A](ioa: IO[A]) = EitherT(LiftIO[F].liftIO(ioa.map(\/.right)))
     }
 
-  implicit def streamTLiftIO[F[_]: LiftIO: Applicative] = 
+  implicit def streamTLiftIO[F[_]: LiftIO: Applicative] =
     new LiftIO[StreamT[F, ?]] {
       def liftIO[A](ioa: IO[A]) = StreamT(LiftIO[F].liftIO(ioa.map(StreamT.Yield(_, StreamT.empty))))
     }

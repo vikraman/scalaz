@@ -40,6 +40,8 @@ object MonadIO {
     def FLO = LiftIO[F]
   }
 
+  import IdT._
+
   implicit def idTMonadIO[F[_]: MonadIO] = fromLiftIO[IdT[F, ?]]
 
   implicit def listTMonadIO[F[_]: MonadIO] = fromLiftIO[ListT[F, ?]]
